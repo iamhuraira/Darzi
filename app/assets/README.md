@@ -5,7 +5,7 @@ Static images and icons for the Darzi app.
 ## Contents
 
 - **App icon** — `icon.png` (Expo app icon)
-- **Splash** — `splash-icon.png`
+- **Splash** — `splash-transparent.png` (native splash: canvas bg only; custom splash is in-app), `splash-icon.png`
 - **Favicon** — `favicon.png` (web)
 - **Brand** — `darzii.png`
 - **Android** — `android-icon-*.png` (adaptive icon layers)
