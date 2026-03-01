@@ -1,0 +1,36 @@
+{
+  "common": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "fullName": "Full name",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "save": "Save",
+    "error": "Something went wrong."
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "signInToContinue": "Sign in to continue to Darzi",
+    "createAccount": "Create account",
+    "joinDarzi": "Join Darzi — درزی",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "invalidCredentials": "Invalid email or password.",
+    "emailExists": "An account with this email already exists.",
+    "passwordsDontMatch": "Passwords do not match",
+    "loginFailed": "Login failed.",
+    "signupFailed": "Sign up failed."
+  },
+  "home": {
+    "hello": "Hello, {{name}}",
+    "appName": "Darzi"
+  },
+  "language": {
+    "en": "English",
+    "ur": "اردو"
+  }
+}

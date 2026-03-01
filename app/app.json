@@ -5,11 +5,11 @@
     "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/darzii.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash-transparent.png",
       "resizeMode": "contain",
-      "backgroundColor": "#F8F6F2"
+      "backgroundColor": "#0F1C2E"
     },
     "ios": {
       "supportsTablet": true
@@ -17,7 +17,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/darzii.png",
-        "backgroundColor": "#F5F5F0"
+        "backgroundColor": "#0F1C2E"
       },
       "predictiveBackGestureEnabled": false
     },

@@ -1,0 +1,36 @@
+{
+  "common": {
+    "signIn": "سائن ان",
+    "signUp": "سائن اپ",
+    "signOut": "سائن آؤٹ",
+    "email": "ای میل",
+    "password": "پاس ورڈ",
+    "confirmPassword": "پاس ورڈ دوبارہ",
+    "fullName": "پورا نام",
+    "continue": "جاری رکھیں",
+    "cancel": "منسوخ",
+    "save": "محفوظ کریں",
+    "error": "کچھ غلط ہو گیا۔"
+  },
+  "auth": {
+    "welcomeBack": "خوش آمدید",
+    "signInToContinue": "درزی میں جاری رکھنے کے لیے سائن ان کریں",
+    "createAccount": "اکاؤنٹ بنائیں",
+    "joinDarzi": "درزی — Darzi میں شامل ہوں",
+    "noAccount": "اکاؤنٹ نہیں ہے؟",
+    "haveAccount": "پہلے سے اکاؤنٹ ہے؟",
+    "invalidCredentials": "ای میل یا پاس ورڈ غلط ہے۔",
+    "emailExists": "اس ای میل سے پہلے ہی اکاؤنٹ موجود ہے۔",
+    "passwordsDontMatch": "پاس ورڈ مماثل نہیں",
+    "loginFailed": "سائن ان نہیں ہو سکا۔",
+    "signupFailed": "سائن اپ نہیں ہو سکا۔"
+  },
+  "home": {
+    "hello": "سلام، {{name}}",
+    "appName": "درزی"
+  },
+  "language": {
+    "en": "English",
+    "ur": "اردو"
+  }
+}
