@@ -68,6 +68,7 @@ export default function App() {
     Poppins_400Regular,
     Poppins_600SemiBold,
     Poppins_700Bold,
+    "JameelNooriNastaleeq": require("./assets/font/Jameel Noori Nastaleeq Kasheeda.ttf"),
   });
 
   // Minimum time so the custom full-screen splash is always visible
@@ -85,10 +86,14 @@ export default function App() {
   const appReady = (fontsLoaded || fontError) && minSplashDone;
   const showCustomSplash = !appReady;
   const hydrateLocale = useAppStore((s) => s.hydrateLocale);
+  const hydrateAppPrefs = useAppStore((s) => s.hydrateAppPrefs);
 
   useEffect(() => {
-    if (appReady) hydrateLocale();
-  }, [appReady, hydrateLocale]);
+    if (appReady) {
+      hydrateLocale();
+      hydrateAppPrefs();
+    }
+  }, [appReady, hydrateLocale, hydrateAppPrefs]);
 
   useEffect(() => {
     if (!showCustomSplash) {

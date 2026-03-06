@@ -1,0 +1,372 @@
+{
+  "customers": [
+    {
+      "id": "dummy_customer_1",
+      "shopId": "__SHOP_ID__",
+      "name": "Ali Hassan",
+      "phone": "03001234567",
+      "address": "House 12, Block B, Gulberg III, Lahore",
+      "notes": "Prefers cotton fabric, regular fit",
+      "createdAt": "2025-01-15T10:00:00.000Z",
+      "updatedAt": "2025-02-20T14:30:00.000Z"
+    },
+    {
+      "id": "dummy_customer_2",
+      "shopId": "__SHOP_ID__",
+      "name": "Fatima Khan",
+      "phone": "03219876543",
+      "address": "DHA Phase 5, Lahore",
+      "notes": "",
+      "createdAt": "2025-01-18T09:00:00.000Z",
+      "updatedAt": "2025-02-18T11:00:00.000Z"
+    },
+    {
+      "id": "dummy_customer_3",
+      "shopId": "__SHOP_ID__",
+      "name": "Muhammad Raza",
+      "phone": "03331234567",
+      "address": "Johar Town, Lahore",
+      "notes": "Formal suits only",
+      "createdAt": "2025-01-22T16:00:00.000Z",
+      "updatedAt": "2025-02-22T10:00:00.000Z"
+    },
+    {
+      "id": "dummy_customer_4",
+      "shopId": "__SHOP_ID__",
+      "name": "Ayesha Siddiqui",
+      "phone": "03008765432",
+      "address": "Model Town, Lahore",
+      "notes": "",
+      "createdAt": "2025-02-01T12:00:00.000Z",
+      "updatedAt": "2025-02-25T09:00:00.000Z"
+    },
+    {
+      "id": "dummy_customer_5",
+      "shopId": "__SHOP_ID__",
+      "name": "Usman Ahmed",
+      "phone": "03115551234",
+      "address": "Faisal Town, Lahore",
+      "notes": "Bulk orders for family",
+      "createdAt": "2025-02-10T08:00:00.000Z",
+      "updatedAt": "2025-02-28T17:00:00.000Z"
+    },
+    {
+      "id": "dummy_customer_6",
+      "shopId": "__SHOP_ID__",
+      "name": "محمد یوسف",
+      "phone": "03001112233",
+      "address": "منٹگمری روڈ، لاہور",
+      "notes": "",
+      "createdAt": "2025-03-01T10:00:00.000Z",
+      "updatedAt": "2025-03-01T10:00:00.000Z"
+    },
+    {
+      "id": "dummy_customer_7",
+      "shopId": "__SHOP_ID__",
+      "name": "زینب پروین",
+      "phone": "03223334455",
+      "address": "اقبال ٹاؤن، لاہور",
+      "notes": "سلوار قمیض",
+      "createdAt": "2025-03-01T11:00:00.000Z",
+      "updatedAt": "2025-03-01T11:00:00.000Z"
+    }
+  ],
+  "measurements": [
+    {
+      "id": "dummy_m_1_ks",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_1",
+      "type": "kameez_shalwar",
+      "fields": {
+        "qameez_length": "42",
+        "chaati": "40",
+        "kamar": "36",
+        "teera": "20",
+        "baazu": "24",
+        "collar": "16",
+        "qameez_ghera": "44",
+        "moda": "18",
+        "cuff": "9.5-2.5",
+        "shalwar_length": "40",
+        "paincha": "10",
+        "shalwar_ghera": "24",
+        "aasan": "28",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-02-20T14:30:00.000Z",
+      "updatedAt": "2025-02-20T14:30:00.000Z"
+    },
+    {
+      "id": "dummy_m_1_kp",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_1",
+      "type": "kurta_pajama",
+      "fields": {
+        "kurta_length": "40",
+        "chaati": "40",
+        "kamar": "36",
+        "teera": "20",
+        "baazu": "24",
+        "collar": "16",
+        "kurta_ghera": "44",
+        "moda": "18",
+        "cuff": "9-2.5",
+        "pajama_length": "38",
+        "paincha": "9",
+        "pajama_ghera": "22",
+        "aasan": "27",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-02-20T14:30:00.000Z",
+      "updatedAt": "2025-02-20T14:30:00.000Z"
+    },
+    {
+      "id": "dummy_m_2_ks",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_2",
+      "type": "kameez_shalwar",
+      "fields": {
+        "qameez_length": "38",
+        "chaati": "36",
+        "kamar": "32",
+        "teera": "18",
+        "baazu": "22",
+        "collar": "14",
+        "qameez_ghera": "40",
+        "moda": "16",
+        "cuff": "8.5-2",
+        "shalwar_length": "38",
+        "paincha": "9",
+        "shalwar_ghera": "22",
+        "aasan": "26",
+        "special_instructions": "Chiffon lining"
+      },
+      "createdAt": "2025-02-18T11:00:00.000Z",
+      "updatedAt": "2025-02-18T11:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_3_pk",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_3",
+      "type": "pant_kot",
+      "fields": {
+        "coat_length": "32",
+        "shoulder": "18",
+        "chest": "42",
+        "waist": "36",
+        "sleeve": "25",
+        "back": "18",
+        "pant_length": "40",
+        "pant_waist": "36",
+        "hip": "40",
+        "thigh": "24",
+        "knee": "18",
+        "bottom": "16",
+        "crotch": "28"
+      },
+      "createdAt": "2025-02-22T10:00:00.000Z",
+      "updatedAt": "2025-02-22T10:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_3_wk",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_3",
+      "type": "waist_kot",
+      "fields": {
+        "length": "28",
+        "shoulder": "17",
+        "chest": "40",
+        "waist": "34",
+        "hip": "38",
+        "back": "17",
+        "armhole": "20"
+      },
+      "createdAt": "2025-02-22T10:00:00.000Z",
+      "updatedAt": "2025-02-22T10:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_4_kp",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_4",
+      "type": "kurta_pajama",
+      "fields": {
+        "kurta_length": "39",
+        "chaati": "38",
+        "kamar": "34",
+        "teera": "19",
+        "baazu": "23",
+        "collar": "15",
+        "kurta_ghera": "42",
+        "moda": "17",
+        "cuff": "9-2",
+        "pajama_length": "37",
+        "paincha": "8",
+        "pajama_ghera": "21",
+        "aasan": "26",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-02-25T09:00:00.000Z",
+      "updatedAt": "2025-02-25T09:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_4_ks",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_4",
+      "type": "kameez_shalwar",
+      "fields": {
+        "qameez_length": "39",
+        "chaati": "38",
+        "kamar": "34",
+        "teera": "19",
+        "baazu": "23",
+        "collar": "15",
+        "qameez_ghera": "42",
+        "moda": "17",
+        "cuff": "9-2",
+        "shalwar_length": "37",
+        "paincha": "8",
+        "shalwar_ghera": "21",
+        "aasan": "26",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-02-25T09:00:00.000Z",
+      "updatedAt": "2025-02-25T09:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_5_ks",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_5",
+      "type": "kameez_shalwar",
+      "fields": {
+        "qameez_length": "41",
+        "chaati": "39",
+        "kamar": "35",
+        "teera": "19.5",
+        "baazu": "23.5",
+        "collar": "15.5",
+        "qameez_ghera": "43",
+        "moda": "17.5",
+        "cuff": "9-2.5",
+        "shalwar_length": "39",
+        "paincha": "9.5",
+        "shalwar_ghera": "23",
+        "aasan": "27",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-02-28T17:00:00.000Z",
+      "updatedAt": "2025-02-28T17:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_5_kp",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_5",
+      "type": "kurta_pajama",
+      "fields": {
+        "kurta_length": "40",
+        "chaati": "39",
+        "kamar": "35",
+        "teera": "19.5",
+        "baazu": "23.5",
+        "collar": "15.5",
+        "kurta_ghera": "43",
+        "moda": "17.5",
+        "cuff": "9-2.5",
+        "pajama_length": "38",
+        "paincha": "9.5",
+        "pajama_ghera": "22",
+        "aasan": "27",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-02-28T17:00:00.000Z",
+      "updatedAt": "2025-02-28T17:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_5_pk",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_5",
+      "type": "pant_kot",
+      "fields": {
+        "coat_length": "31",
+        "shoulder": "17.5",
+        "chest": "41",
+        "waist": "35",
+        "sleeve": "24",
+        "back": "17.5",
+        "pant_length": "39",
+        "pant_waist": "35",
+        "hip": "39",
+        "thigh": "23",
+        "knee": "17",
+        "bottom": "15",
+        "crotch": "27"
+      },
+      "createdAt": "2025-02-28T17:00:00.000Z",
+      "updatedAt": "2025-02-28T17:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_5_wk",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_5",
+      "type": "waist_kot",
+      "fields": {
+        "length": "27",
+        "shoulder": "17",
+        "chest": "39",
+        "waist": "33",
+        "hip": "37",
+        "back": "16.5",
+        "armhole": "19"
+      },
+      "createdAt": "2025-02-28T17:00:00.000Z",
+      "updatedAt": "2025-02-28T17:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_6_ks",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_6",
+      "type": "kameez_shalwar",
+      "fields": {
+        "qameez_length": "40",
+        "chaati": "38",
+        "kamar": "34",
+        "teera": "19",
+        "baazu": "23",
+        "collar": "15",
+        "qameez_ghera": "42",
+        "moda": "17",
+        "cuff": "9-2",
+        "shalwar_length": "38",
+        "paincha": "9",
+        "shalwar_ghera": "22",
+        "aasan": "26",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-03-01T10:00:00.000Z",
+      "updatedAt": "2025-03-01T10:00:00.000Z"
+    },
+    {
+      "id": "dummy_m_7_ks",
+      "shopId": "__SHOP_ID__",
+      "customerId": "dummy_customer_7",
+      "type": "kameez_shalwar",
+      "fields": {
+        "qameez_length": "37",
+        "chaati": "34",
+        "kamar": "30",
+        "teera": "17",
+        "baazu": "21",
+        "collar": "14",
+        "qameez_ghera": "38",
+        "moda": "15",
+        "cuff": "8-2",
+        "shalwar_length": "36",
+        "paincha": "8",
+        "shalwar_ghera": "20",
+        "aasan": "24",
+        "special_instructions": ""
+      },
+      "createdAt": "2025-03-01T11:00:00.000Z",
+      "updatedAt": "2025-03-01T11:00:00.000Z"
+    }
+  ]
+}

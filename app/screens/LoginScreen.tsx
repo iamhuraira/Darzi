@@ -16,8 +16,11 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
+import { getUrduStyle } from "../theme/fonts";
 import { getTailorUser } from "../utils/tailorStorage";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
+import { useAppStore } from "../stores/appStore";
+import { t } from "../utils/lang";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Login">;
 
@@ -25,6 +28,7 @@ export function LoginScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<Nav>();
   const setAuth = useTailorAuthStore((s) => s.setAuth);
+  const language = useAppStore((s) => s.language);
 
   const [phone, setPhone] = useState("03086173323");
   const [password, setPassword] = useState("4123004abh");
@@ -37,7 +41,7 @@ export function LoginScreen() {
     setError("");
     const phoneNorm = phone.replace(/\D/g, "").slice(-11);
     if (!phoneNorm || phoneNorm.length < 11 || !password) {
-      setError("Enter phone and password");
+      setError(t("auth.enterPhonePassword", language));
       return;
     }
     setLoading(true);
@@ -48,7 +52,7 @@ export function LoginScreen() {
         (user.phone.replace(/\D/g, "").endsWith(phoneNorm) || phoneNorm.endsWith(user.phone.replace(/\D/g, ""))) &&
         user.password === password;
       if (!match) {
-        setError("Invalid phone or password");
+        setError(t("auth.invalidCredentials", language));
         setLoading(false);
         return;
       }
@@ -61,9 +65,9 @@ export function LoginScreen() {
         shopId: shop?.id ?? user.id,
         role: "owner",
       });
-      navigation.replace("Dashboard");
+      // RootNavigator switches to Drawer (Dashboard) when auth is set — no navigation needed
     } catch {
-      setError("Something went wrong");
+      setError(t("common.error", language));
     } finally {
       setLoading(false);
     }
@@ -85,14 +89,14 @@ export function LoginScreen() {
             <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
           </Pressable>
         </View>
-        <Text style={styles.title}>Login</Text>
-        <Text style={styles.subtitle}>Sign in to your shop account</Text>
+        <Text style={[styles.title, language === "urdu" && getUrduStyle(22)]}>{t("auth.login", language)}</Text>
+        <Text style={[styles.subtitle, language === "urdu" && getUrduStyle(14)]}>{t("auth.signInToShop", language)}</Text>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Phone Number</Text>
+          <Text style={[styles.label, language === "urdu" && getUrduStyle(14)]}>{t("common.phoneNumber", language)}</Text>
           <TextInput
             style={[styles.input, error ? styles.inputError : null]}
-            placeholder="03XX-XXXXXXX"
+            placeholder={t("auth.phonePlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={phone}
             onChangeText={(t) => { setPhone(t); setError(""); }}
@@ -100,12 +104,12 @@ export function LoginScreen() {
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
           />
-          <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("common.password", language)}</Text>
           <View style={[styles.passwordInputWrapper, error ? styles.inputError : null]}>
             <TextInput
               ref={passwordRef}
               style={styles.passwordInputInner}
-              placeholder="Password"
+              placeholder={t("common.password", language)}
               placeholderTextColor={colors.creamMuted}
               value={password}
               onChangeText={(t) => { setPassword(t); setError(""); }}
@@ -121,17 +125,19 @@ export function LoginScreen() {
         </View>
 
         <Pressable
-          style={({ pressed }) => [styles.primaryBtn, pressed && styles.btnPressed]}
+          style={({ pressed }) => [styles.primaryBtnOuter, pressed && styles.btnPressed]}
           onPress={handleLogin}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color={colors.cream} /> : <Text style={styles.primaryBtnText}>Sign in</Text>}
+          <View style={styles.primaryBtn}>
+            {loading ? <ActivityIndicator color={colors.cream} /> : <Text style={[styles.primaryBtnText, language === "urdu" && getUrduStyle(16)]}>{t("common.signIn", language)}</Text>}
+          </View>
         </Pressable>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+          <Text style={[styles.footerText, language === "urdu" && getUrduStyle(15)]}>{t("auth.noAccount", language)} </Text>
           <Pressable onPress={() => navigation.navigate("Signup")} style={({ pressed }) => [pressed && styles.btnPressed]}>
-            <Text style={styles.link}>Sign up</Text>
+            <Text style={[styles.link, language === "urdu" && getUrduStyle(15)]}>{t("common.signUp", language)}</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -197,11 +203,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   errorText: { fontSize: 12, color: colors.error, marginTop: 4 },
+  primaryBtnOuter: {
+    marginBottom: 24,
+    minHeight: 52,
+    alignSelf: "stretch",
+  },
   primaryBtn: {
+    flex: 1,
     backgroundColor: colors.copper,
     borderRadius: 12,
     paddingVertical: 16,
-    minHeight: 52,
+    
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 24,

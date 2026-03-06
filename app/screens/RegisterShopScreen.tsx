@@ -17,9 +17,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
+import { getUrduStyle } from "../theme/fonts";
 import { shopRegistrationSchema, type ShopRegistrationInput } from "../utils/validation";
 import { generateId, setTailorShop, setTailorUser } from "../utils/tailorStorage";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
+import { useAppStore } from "../stores/appStore";
+import { t } from "../utils/lang";
 
 const CITIES = ["Lahore"]; // Only Lahore for now
 
@@ -32,6 +35,7 @@ export function RegisterShopScreen() {
   const route = useRoute<Route>();
   const step1 = route.params?.step1;
   const setAuth = useTailorAuthStore((s) => s.setAuth);
+  const language = useAppStore((s) => s.language);
 
   const [shopName, setShopName] = useState("");
   const [shopPhone, setShopPhone] = useState("");
@@ -101,8 +105,8 @@ export function RegisterShopScreen() {
         role: "owner",
       });
 
-      Alert.alert("Success", "Shop created successfully! Welcome aboard 🎉", [
-        { text: "OK", onPress: () => navigation.replace("Dashboard") },
+      Alert.alert(t("common.success", language), t("auth.shopCreated", language), [
+        { text: "OK" }, // RootNavigator already switched to Drawer (Dashboard) when auth was set
       ]);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
@@ -128,28 +132,28 @@ export function RegisterShopScreen() {
             <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
           </Pressable>
         </View>
-        <Text style={styles.title}>Register Your Shop</Text>
-        <Text style={styles.subtitle}>Step 2 of 2 — Your shop details</Text>
+        <Text style={[styles.title, language === "urdu" && getUrduStyle(22)]}>{t("auth.registerShop", language)}</Text>
+        <Text style={[styles.subtitle, language === "urdu" && getUrduStyle(14)]}>{t("auth.step2Shop", language)}</Text>
         <View style={styles.stepDots}>
           <View style={[styles.dot, styles.dotInactive]} />
           <View style={[styles.dot, styles.dotActive]} />
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Shop Name</Text>
+          <Text style={[styles.label, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopName", language)}</Text>
           <TextInput
             style={[styles.input, errors.shopName && styles.inputError]}
-            placeholder="Your shop name"
+            placeholder={t("auth.shopName", language)}
             placeholderTextColor={colors.creamMuted}
             value={shopName}
             onChangeText={(t) => { setShopName(t); setErrors((e) => ({ ...e, shopName: undefined })); }}
           />
           {errors.shopName ? <Text style={styles.errorText}>{errors.shopName}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Shop Phone Number</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopPhone", language)}</Text>
           <TextInput
             style={[styles.input, errors.shopPhone && styles.inputError]}
-            placeholder="03XX-XXXXXXX"
+            placeholder={t("auth.phonePlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={shopPhone}
             onChangeText={(t) => { setShopPhone(t); setErrors((e) => ({ ...e, shopPhone: undefined })); }}
@@ -157,7 +161,7 @@ export function RegisterShopScreen() {
           />
           {errors.shopPhone ? <Text style={styles.errorText}>{errors.shopPhone}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>City</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.city", language)}</Text>
           <View style={styles.cityRow}>
             {CITIES.map((c) => (
               <Pressable
@@ -171,10 +175,10 @@ export function RegisterShopScreen() {
           </View>
           {errors.city ? <Text style={styles.errorText}>{errors.city}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Shop Address</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopAddress", language)}</Text>
           <TextInput
             style={[styles.input, styles.inputMultiline, errors.address && styles.inputError]}
-            placeholder="Full address (min 10 characters)"
+            placeholder={t("auth.shopAddressPlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={address}
             onChangeText={(t) => { setAddress(t); setErrors((e) => ({ ...e, address: undefined })); }}
@@ -184,10 +188,10 @@ export function RegisterShopScreen() {
           />
           {errors.address ? <Text style={styles.errorText}>{errors.address}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Shop Description / Specialty (optional)</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopDescription", language)}</Text>
           <TextInput
             style={[styles.input, styles.inputMultiline]}
-            placeholder="e.g. Specializing in Shalwar Kameez and formal suits"
+            placeholder={t("auth.shopDescriptionPlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={description}
             onChangeText={setDescription}
@@ -198,15 +202,17 @@ export function RegisterShopScreen() {
         </View>
 
         <Pressable
-          style={({ pressed }) => [styles.primaryBtn, pressed && styles.btnPressed]}
+          style={({ pressed }) => [styles.primaryBtnOuter, pressed && styles.btnPressed]}
           onPress={() => void handleCreateShop()}
           disabled={loading}
         >
-          {loading ? (
-            <ActivityIndicator color={colors.cream} />
-          ) : (
-            <Text style={styles.primaryBtnText}>Create My Shop 🎉</Text>
-          )}
+          <View style={styles.primaryBtn}>
+            {loading ? (
+              <ActivityIndicator color={colors.cream} />
+            ) : (
+              <Text style={[styles.primaryBtnText, language === "urdu" && getUrduStyle(16)]}>{t("auth.createMyShop", language)}</Text>
+            )}
+          </View>
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -263,11 +269,15 @@ const styles = StyleSheet.create({
   chipText: { fontSize: 14, color: colors.creamMuted },
   chipTextActive: { color: colors.copper, fontWeight: "600" },
   errorText: { fontSize: 12, color: colors.error, marginTop: 4 },
+  primaryBtnOuter: {
+    minHeight: 52,
+    alignSelf: "stretch",
+  },
   primaryBtn: {
+    flex: 1,
     backgroundColor: colors.copper,
     borderRadius: 12,
     paddingVertical: 16,
-    minHeight: 52,
     alignItems: "center",
     justifyContent: "center",
   },

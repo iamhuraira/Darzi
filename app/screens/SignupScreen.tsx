@@ -16,13 +16,17 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
+import { getUrduStyle } from "../theme/fonts";
 import { ownerSignupSchema, type OwnerSignupInput } from "../utils/validation";
+import { useAppStore } from "../stores/appStore";
+import { t } from "../utils/lang";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Signup">;
 
 export function SignupScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<Nav>();
+  const language = useAppStore((s) => s.language);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+92 ");
@@ -79,14 +83,14 @@ export function SignupScreen() {
             <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
           </Pressable>
         </View>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Step 1 of 2 — Your personal info</Text>
+        <Text style={[styles.title, language === "urdu" && getUrduStyle(22)]}>{t("auth.createAccount", language)}</Text>
+        <Text style={[styles.subtitle, language === "urdu" && getUrduStyle(14)]}>{t("auth.step1Personal", language)}</Text>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Full Name</Text>
+          <Text style={[styles.label, language === "urdu" && getUrduStyle(14)]}>{t("common.fullName", language)}</Text>
           <TextInput
             style={[styles.input, errors.name && styles.inputError]}
-            placeholder="Enter full name"
+            placeholder={t("auth.enterFullName", language)}
             placeholderTextColor={colors.creamMuted}
             value={name}
             onChangeText={(t) => { setName(t); setErrors((e) => ({ ...e, name: undefined })); }}
@@ -96,11 +100,11 @@ export function SignupScreen() {
           />
           {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Phone Number</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("common.phoneNumber", language)}</Text>
           <TextInput
             ref={phoneRef}
             style={[styles.input, errors.phone && styles.inputError]}
-            placeholder="03XX-XXXXXXX"
+            placeholder={t("auth.phonePlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={phone}
             onChangeText={(t) => { setPhone(t); setErrors((e) => ({ ...e, phone: undefined })); }}
@@ -110,12 +114,12 @@ export function SignupScreen() {
           />
           {errors.phone ? <Text style={styles.errorText}>{errors.phone}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("common.password", language)}</Text>
           <View style={[styles.passwordInputWrapper, errors.password && styles.inputError]}>
             <TextInput
               ref={passwordRef}
               style={styles.passwordInputInner}
-              placeholder="Min 8 chars, 1 number"
+              placeholder={t("auth.passwordPlaceholder", language)}
               placeholderTextColor={colors.creamMuted}
               value={password}
               onChangeText={(t) => { setPassword(t); setErrors((e) => ({ ...e, password: undefined })); }}
@@ -129,12 +133,12 @@ export function SignupScreen() {
           </View>
           {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }]}>Confirm Password</Text>
+          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("common.confirmPassword", language)}</Text>
           <View style={[styles.passwordInputWrapper, errors.confirmPassword && styles.inputError]}>
             <TextInput
               ref={confirmRef}
               style={styles.passwordInputInner}
-              placeholder="Confirm password"
+              placeholder={t("common.confirmPassword", language)}
               placeholderTextColor={colors.creamMuted}
               value={confirmPassword}
               onChangeText={(t) => { setConfirmPassword(t); setErrors((e) => ({ ...e, confirmPassword: undefined })); }}
@@ -150,21 +154,23 @@ export function SignupScreen() {
         </View>
 
         <Pressable
-          style={({ pressed }) => [styles.primaryBtn, pressed && styles.btnPressed]}
+          style={({ pressed }) => [styles.primaryBtnOuter, pressed && styles.btnPressed]}
           onPress={handleContinue}
           disabled={loading}
         >
-          {loading ? (
-            <ActivityIndicator color={colors.cream} size="small" />
-          ) : (
-            <Text style={styles.primaryBtnText}>Continue to Shop Details</Text>
-          )}
+          <View style={styles.primaryBtn}>
+            {loading ? (
+              <ActivityIndicator color={colors.cream} size="small" />
+            ) : (
+              <Text style={[styles.primaryBtnText, language === "urdu" && getUrduStyle(16)]}>{t("auth.continueToShopDetails", language)}</Text>
+            )}
+          </View>
         </Pressable>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account? </Text>
+          <Text style={[styles.footerText, language === "urdu" && getUrduStyle(15)]}>{t("auth.haveAccount", language)} </Text>
           <Pressable onPress={() => navigation.navigate("Login")} style={({ pressed }) => [pressed && styles.btnPressed]}>
-            <Text style={styles.link}>Sign in</Text>
+            <Text style={[styles.link, language === "urdu" && getUrduStyle(15)]}>{t("common.signIn", language)}</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -230,18 +236,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   errorText: { fontSize: 12, color: colors.error, marginTop: 4 },
+  primaryBtnOuter: {
+    marginTop: 8,
+    marginBottom: 24,
+    minHeight: 52,
+    alignSelf: "stretch",
+  },
   primaryBtn: {
+    flex: 1,
     backgroundColor: colors.copper,
     borderRadius: 12,
     borderWidth: 1.5,
     borderColor: "#A35220",
     paddingVertical: 16,
     paddingHorizontal: 24,
-    minHeight: 52,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 8,
-    marginBottom: 24,
   },
   primaryBtnText: { fontSize: 16, fontWeight: "600", color: colors.cream, fontFamily: "Poppins_600SemiBold" },
   btnPressed: { opacity: 0.9 },

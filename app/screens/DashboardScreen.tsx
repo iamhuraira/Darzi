@@ -6,9 +6,12 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { DrawerParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
+import { getUrduStyle } from "../theme/fonts";
 import { getTailorShop } from "../utils/tailorStorage";
 import type { TailorShop } from "../utils/tailorStorage";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
+import { useAppStore } from "../stores/appStore";
+import { t } from "../utils/lang";
 
 type Nav = DrawerNavigationProp<DrawerParamList, "Dashboard">;
 
@@ -16,6 +19,7 @@ export function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<Nav>();
   const auth = useTailorAuthStore((s) => s.auth);
+  const language = useAppStore((s) => s.language);
   const [shop, setShop] = useState<TailorShop | null>(null);
 
   useEffect(() => {
@@ -30,11 +34,11 @@ export function DashboardScreen() {
         <Pressable onPress={() => navigation.openDrawer()} style={styles.menuBtn}>
           <MaterialCommunityIcons name="menu" size={28} color={colors.cream} />
         </Pressable>
-        <Text style={styles.headerTitle}>Dashboard</Text>
+        <Text style={[styles.headerTitle, language === "urdu" && getUrduStyle(20)]}>{t("dashboard.title", language)}</Text>
       </View>
       <View style={styles.content}>
-        <Text style={styles.title}>Dashboard</Text>
-        <Text style={styles.shopName}>{shop?.shopName ?? "My Shop"}</Text>
+        <Text style={[styles.title, language === "urdu" && getUrduStyle(24)]}>{t("dashboard.title", language)}</Text>
+        <Text style={[styles.shopName, language === "urdu" && getUrduStyle(18)]}>{shop?.shopName ?? "My Shop"}</Text>
       </View>
     </View>
   );

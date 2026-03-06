@@ -1,3 +1,4 @@
+import type { MeasurementType } from "../types/customers";
 import type { OwnerSignupInput } from "../utils/validation";
 
 export type RootStackParamList = {
@@ -11,4 +12,13 @@ export type RootStackParamList = {
 
 export type DrawerParamList = {
   Dashboard: undefined;
+  Customers: undefined;
+};
+
+export type CustomersStackParamList = {
+  CustomersList: undefined;
+  AddCustomer: undefined;
+  EditCustomer: { customerId: string };
+  CustomerDetail: { customerId: string };
+  MeasurementForm: { customerId: string; type: MeasurementType };
 };

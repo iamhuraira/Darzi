@@ -32,3 +32,14 @@ export const shopRegistrationSchema = z.object({
 });
 
 export type ShopRegistrationInput = z.infer<typeof shopRegistrationSchema>;
+
+export const customerSchema = z.object({
+  name: z.string().min(1, "Name is required").min(2, "Name must be at least 2 characters"),
+  phone: z
+    .string()
+    .min(1, "Phone is required")
+    .refine((v) => /^\d+$/.test(v.replace(/\D/g, "")) && v.replace(/\D/g, "").length === 11, "Phone must be 11 digits"),
+  address: z.string().optional().default(""),
+  notes: z.string().optional().default(""),
+});
+export type CustomerInput = z.infer<typeof customerSchema>;
