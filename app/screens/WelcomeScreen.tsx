@@ -5,22 +5,24 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
+import { useAppStore } from "../stores/appStore";
 
 type Nav = NativeStackNavigationProp<RootStackParamList, "Welcome">;
 
 export function WelcomeScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<Nav>();
+  const isRtl = useAppStore((s) => s.language) === "urdu";
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <View style={styles.top}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}>
+      <View style={[styles.top, isRtl && styles.rtl]}>
         <MaterialCommunityIcons name="scissors-cutting" size={80} color={colors.copper} />
         <Text style={styles.appName}>Darzi App</Text>
         <Text style={styles.tagline}>Manage your tailor shop smartly</Text>
       </View>
 
-      <View style={styles.buttons}>
+      <View style={[styles.buttons, isRtl && styles.rtl]}>
         <Pressable
           style={({ pressed }) => [styles.primaryBtn, pressed && styles.btnPressed]}
           onPress={() => navigation.navigate("Signup")}
@@ -47,6 +49,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: "space-between",
   },
+  rtl: { direction: "rtl" },
   top: {
     flex: 1,
     justifyContent: "center",

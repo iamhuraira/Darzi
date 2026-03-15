@@ -7,8 +7,11 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { CustomersStackParamList } from "../../navigation/types";
 import { colors } from "../../theme/colors";
+import { getStyleForDynamicText } from "../../theme/fonts";
+import { useAppStore } from "../../stores/appStore";
 import { useCustomerStore } from "../../stores/customerStore";
 import { MEASUREMENT_TYPES } from "../../constants/measurementTypes";
+import { t } from "../../utils/lang";
 import type { MeasurementType } from "../../types/customers";
 
 type Nav = NativeStackNavigationProp<CustomersStackParamList, "CustomerDetail">;
@@ -26,6 +29,8 @@ export function CustomerDetailScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<Nav>();
   const route = useRoute<Route>();
+  const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
   const { customerId } = route.params;
   const { getCustomerById, getMeasurementByType, loadMeasurements, deleteCustomer } = useCustomerStore();
   const customer = getCustomerById(customerId);
@@ -38,10 +43,12 @@ export function CustomerDetailScreen() {
 
   if (!customer) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Customer not found</Text>
+      <View style={[styles.container, isRtl && styles.rtl]}>
+        <Text style={[styles.errorText, { textAlign: isRtl ? "right" : "left" }]}>
+          {t("customers.notFound", language)}
+        </Text>
         <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.link}>Go back</Text>
+          <Text style={styles.link}>{t("common.goBack", language)}</Text>
         </Pressable>
       </View>
     );
@@ -61,69 +68,84 @@ export function CustomerDetailScreen() {
     );
   };
 
+  const textAlign = isRtl ? "right" : "left";
+
   return (
-    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <View style={styles.header}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}>
+      <View style={[styles.header, isRtl && styles.rtl]}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
+          <MaterialCommunityIcons name={isRtl ? "arrow-right" : "arrow-left"} size={24} color={colors.cream} />
         </Pressable>
-        <Text style={styles.headerTitle} numberOfLines={1}>{customer.name}</Text>
+        <Text style={[styles.headerTitle, getStyleForDynamicText(customer.name, 18)]} numberOfLines={1}>
+          {customer.name}
+        </Text>
         <Pressable onPress={() => navigation.navigate("EditCustomer", { customerId })} style={styles.iconBtn}>
           <MaterialCommunityIcons name="pencil" size={22} color={colors.cream} />
         </Pressable>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.infoCard}>
+      <ScrollView contentContainerStyle={[styles.scrollContent, isRtl && styles.rtl]} showsVerticalScrollIndicator={false}>
+        <View style={[styles.infoCard, isRtl && styles.rtl]}>
           <View style={styles.infoRow}>
             <MaterialCommunityIcons name="account" size={24} color={colors.copper} />
-            <Text style={styles.infoName}>{customer.name}</Text>
+            <Text style={[styles.infoName, getStyleForDynamicText(customer.name, 18)]}>{customer.name}</Text>
           </View>
-          <Text style={styles.infoPhone}>{customer.phone}</Text>
-          {customer.address ? <Text style={styles.infoAddress}>{customer.address}</Text> : null}
+          <Text style={[styles.infoPhone, getStyleForDynamicText(customer.phone, 15)]}>{customer.phone}</Text>
+          {customer.address ? (
+            <Text style={[styles.infoAddress, getStyleForDynamicText(customer.address, 14)]}>{customer.address}</Text>
+          ) : null}
           <Text style={styles.infoAdded}>Added: {formatDate(customer.createdAt)}</Text>
           <View style={styles.infoActions}>
             <Pressable
-              style={({ pressed }) => [styles.editBtn, pressed && styles.btnPressed]}
+              style={({ pressed }) => [styles.editBtnOuter, pressed && styles.btnPressed]}
               onPress={() => navigation.navigate("EditCustomer", { customerId })}
             >
-              <Text style={styles.editBtnText}>Edit</Text>
+              <View style={styles.editBtn}>
+                <Text style={[styles.editBtnText, getStyleForDynamicText(t("common.edit", language), 15)]}>{t("common.edit", language)}</Text>
+              </View>
             </Pressable>
             <Pressable
-              style={({ pressed }) => [styles.deleteBtn, pressed && styles.btnPressed]}
+              style={({ pressed }) => [styles.deleteBtnOuter, pressed && styles.btnPressed]}
               onPress={handleDelete}
             >
-              <MaterialCommunityIcons name="delete" size={20} color={colors.error} />
-              <Text style={styles.deleteBtnText}>Delete</Text>
+              <View style={styles.deleteBtn}>
+                <MaterialCommunityIcons name="delete" size={20} color={colors.error} />
+                <Text style={[styles.deleteBtnText, getStyleForDynamicText(t("common.delete", language), 15)]}>{t("common.delete", language)}</Text>
+              </View>
             </Pressable>
           </View>
         </View>
 
-        <Text style={styles.sectionTitle}>Measurements 📏</Text>
-        <View style={styles.grid}>
-          {MEASUREMENT_TYPES.map(({ type, label, labelUrdu }) => {
+        <View style={[styles.sectionHeader, isRtl && styles.rtl]}>
+          <View style={styles.sectionDivider} />
+          <Text style={[styles.sectionTitle, getStyleForDynamicText(t("customers.measurements", language), 18)]}>
+            {t("customers.measurements", language)} 📏
+          </Text>
+          <View style={styles.sectionDivider} />
+        </View>
+        <View style={[styles.measurementList, isRtl && styles.rtl]}>
+          {MEASUREMENT_TYPES.map((type) => {
             const saved = getMeasurementByType(customerId, type);
+            const cardTitle = t(`measurementTypes.${type}`, language);
             return (
               <Pressable
                 key={type}
-                style={({ pressed }) => [styles.typeCard, pressed && styles.btnPressed]}
+                style={({ pressed }) => [styles.typeCardOuter, pressed && styles.btnPressed]}
                 onPress={() => navigation.navigate("MeasurementForm", { customerId, type })}
               >
-                <Text style={styles.typeCardUrdu}>{labelUrdu}</Text>
-                <Text style={styles.typeCardLabel}>{label}</Text>
-                {saved ? (
-                  <>
-                    <View style={styles.savedBadge}>
-                      <MaterialCommunityIcons name="check" size={16} color={colors.success} />
-                      <Text style={styles.savedText}>Saved</Text>
+                <View style={[styles.typeCard, isRtl && styles.rtl]}>
+                  <Text style={[styles.typeCardTitle, getStyleForDynamicText(cardTitle, 16)]} numberOfLines={1}>
+                    {cardTitle}
+                  </Text>
+                  {saved ? (
+                    <View style={styles.statusBadge}>
+                      <MaterialCommunityIcons name="check-circle" size={20} color={colors.success} />
                     </View>
-                    <Text style={styles.viewEditText}>View / Edit</Text>
-                  </>
-                ) : (
-                  <View style={styles.addBadge}>
-                    <MaterialCommunityIcons name="plus" size={18} color={colors.copper} />
-                    <Text style={styles.addText}>Add</Text>
-                  </View>
-                )}
+                  ) : (
+                    <View style={[styles.statusBadge, styles.badgeAdd]}>
+                      <MaterialCommunityIcons name="plus-circle-outline" size={20} color={colors.copper} />
+                    </View>
+                  )}
+                </View>
               </Pressable>
             );
           })}
@@ -135,13 +157,14 @@ export function CustomerDetailScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  rtl: { direction: "rtl" },
   header: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backBtn: { padding: 8, marginLeft: -8 },
+  backBtn: { padding: 8, marginStart: -8 },
   headerTitle: {
     flex: 1,
     fontSize: 18,
@@ -168,49 +191,104 @@ const styles = StyleSheet.create({
   infoAddress: { fontSize: 14, color: colors.creamMuted, marginTop: 4 },
   infoAdded: { fontSize: 12, color: colors.mutedGray, marginTop: 8 },
   infoActions: { flexDirection: "row", gap: 12, marginTop: 16 },
+  editBtnOuter: {
+    flex: 1,
+    minHeight: 44,
+    alignSelf: "stretch",
+  },
   editBtn: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     backgroundColor: colors.input,
-    borderRadius: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  editBtnText: { fontSize: 14, fontWeight: "600", color: colors.copper },
+  editBtnText: { fontSize: 15, fontWeight: "600", color: colors.copper, fontFamily: "Poppins_600SemiBold" },
+  deleteBtnOuter: {
+    flex: 1,
+    minHeight: 44,
+    alignSelf: "stretch",
+  },
   deleteBtn: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.error,
+    backgroundColor: "transparent",
   },
-  deleteBtnText: { fontSize: 14, color: colors.error },
+  deleteBtnText: { fontSize: 15, fontWeight: "600", color: colors.error, fontFamily: "Poppins_600SemiBold" },
   btnPressed: { opacity: 0.9 },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 8,
+  },
+  sectionDivider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.border,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     color: colors.cream,
     fontFamily: "Poppins_600SemiBold",
-    marginBottom: 16,
+    marginHorizontal: 12,
   },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
+  measurementList: {
+    gap: 10,
+  },
+  typeCardOuter: {
+    width: "100%",
   },
   typeCard: {
-    width: "47%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: colors.surface,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    minHeight: 56,
   },
-  typeCardUrdu: { fontSize: 16, color: colors.copper, marginBottom: 4 },
-  typeCardLabel: { fontSize: 14, color: colors.creamMuted, marginBottom: 12 },
-  savedBadge: { flexDirection: "row", alignItems: "center", gap: 6 },
-  savedText: { fontSize: 13, color: colors.success, fontWeight: "600" },
-  viewEditText: { fontSize: 12, color: colors.mutedGray, marginTop: 4 },
-  addBadge: { flexDirection: "row", alignItems: "center", gap: 6 },
-  addText: { fontSize: 14, fontWeight: "600", color: colors.copper },
+  typeCardTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.copper,
+    fontFamily: "Poppins_600SemiBold",
+    marginEnd: 12,
+  },
+  statusBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  badgeAdd: {
+    gap: 8,
+  },
+  badgeText: {
+    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
+  },
+  badgeTextSaved: { fontSize: 13, color: colors.success },
+  badgeTextAdd: { fontSize: 14, color: colors.copper },
+  viewEditText: {
+    fontSize: 12,
+    color: colors.mutedGray,
+  },
 });

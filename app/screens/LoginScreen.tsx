@@ -16,7 +16,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
-import { getUrduStyle } from "../theme/fonts";
+import { getStyleForDynamicText } from "../theme/fonts";
 import { getTailorUser } from "../utils/tailorStorage";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
 import { useAppStore } from "../stores/appStore";
@@ -29,6 +29,7 @@ export function LoginScreen() {
   const navigation = useNavigation<Nav>();
   const setAuth = useTailorAuthStore((s) => s.setAuth);
   const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
 
   const [phone, setPhone] = useState("03086173323");
   const [password, setPassword] = useState("4123004abh");
@@ -75,27 +76,27 @@ export function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}
+      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={20}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, isRtl && styles.rtl]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerRow}>
+        <View style={[styles.headerRow, isRtl && styles.rtl]}>
           <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
+            <MaterialCommunityIcons name={isRtl ? "arrow-right" : "arrow-left"} size={24} color={colors.cream} />
           </Pressable>
         </View>
-        <Text style={[styles.title, language === "urdu" && getUrduStyle(22)]}>{t("auth.login", language)}</Text>
-        <Text style={[styles.subtitle, language === "urdu" && getUrduStyle(14)]}>{t("auth.signInToShop", language)}</Text>
+        <Text style={[styles.title, getStyleForDynamicText(t("auth.login", language), 22)]}>{t("auth.login", language)}</Text>
+        <Text style={[styles.subtitle, getStyleForDynamicText(t("auth.signInToShop", language), 14)]}>{t("auth.signInToShop", language)}</Text>
 
-        <View style={styles.card}>
-          <Text style={[styles.label, language === "urdu" && getUrduStyle(14)]}>{t("common.phoneNumber", language)}</Text>
+        <View style={[styles.card, isRtl && styles.rtl]}>
+          <Text style={[styles.label, getStyleForDynamicText(t("common.phoneNumber", language), 14)]}>{t("common.phoneNumber", language)}</Text>
           <TextInput
-            style={[styles.input, error ? styles.inputError : null]}
+            style={[styles.input, error ? styles.inputError : null, isRtl && styles.inputRtl]}
             placeholder={t("auth.phonePlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={phone}
@@ -104,11 +105,11 @@ export function LoginScreen() {
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
           />
-          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("common.password", language)}</Text>
-          <View style={[styles.passwordInputWrapper, error ? styles.inputError : null]}>
+          <Text style={[styles.label, { marginTop: 16 }, getStyleForDynamicText(t("common.password", language), 14)]}>{t("common.password", language)}</Text>
+          <View style={[styles.passwordInputWrapper, error ? styles.inputError : null, isRtl && styles.rtl]}>
             <TextInput
               ref={passwordRef}
-              style={styles.passwordInputInner}
+              style={[styles.passwordInputInner, isRtl && styles.inputRtl]}
               placeholder={t("common.password", language)}
               placeholderTextColor={colors.creamMuted}
               value={password}
@@ -130,14 +131,14 @@ export function LoginScreen() {
           disabled={loading}
         >
           <View style={styles.primaryBtn}>
-            {loading ? <ActivityIndicator color={colors.cream} /> : <Text style={[styles.primaryBtnText, language === "urdu" && getUrduStyle(16)]}>{t("common.signIn", language)}</Text>}
+            {loading ? <ActivityIndicator color={colors.cream} /> : <Text style={[styles.primaryBtnText, getStyleForDynamicText(t("common.signIn", language), 16)]}>{t("common.signIn", language)}</Text>}
           </View>
         </Pressable>
 
-        <View style={styles.footer}>
-          <Text style={[styles.footerText, language === "urdu" && getUrduStyle(15)]}>{t("auth.noAccount", language)} </Text>
+        <View style={[styles.footer, isRtl && styles.rtl]}>
+          <Text style={[styles.footerText, getStyleForDynamicText(t("auth.noAccount", language), 15)]}>{t("auth.noAccount", language)} </Text>
           <Pressable onPress={() => navigation.navigate("Signup")} style={({ pressed }) => [pressed && styles.btnPressed]}>
-            <Text style={[styles.link, language === "urdu" && getUrduStyle(15)]}>{t("common.signUp", language)}</Text>
+            <Text style={[styles.link, getStyleForDynamicText(t("common.signUp", language), 15)]}>{t("common.signUp", language)}</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -147,9 +148,11 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  rtl: { direction: "rtl" },
   scrollContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 24, paddingVertical: 24, paddingBottom: 32 },
   headerRow: { flexDirection: "row", marginBottom: 8 },
-  backBtn: { padding: 8, marginLeft: -8 },
+  backBtn: { padding: 8, marginStart: -8 },
+  inputRtl: { textAlign: "right" },
   title: {
     fontSize: 22,
     fontWeight: "600",

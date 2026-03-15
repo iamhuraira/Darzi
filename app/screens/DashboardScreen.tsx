@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { DrawerParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
-import { getUrduStyle } from "../theme/fonts";
+import { getStyleForDynamicText } from "../theme/fonts";
 import { getTailorShop } from "../utils/tailorStorage";
 import type { TailorShop } from "../utils/tailorStorage";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
@@ -20,6 +20,7 @@ export function DashboardScreen() {
   const navigation = useNavigation<Nav>();
   const auth = useTailorAuthStore((s) => s.auth);
   const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
   const [shop, setShop] = useState<TailorShop | null>(null);
 
   useEffect(() => {
@@ -29,16 +30,16 @@ export function DashboardScreen() {
   }, [auth?.shopId]);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <View style={styles.headerRow}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}>
+      <View style={[styles.headerRow, isRtl && styles.rtl]}>
         <Pressable onPress={() => navigation.openDrawer()} style={styles.menuBtn}>
           <MaterialCommunityIcons name="menu" size={28} color={colors.cream} />
         </Pressable>
-        <Text style={[styles.headerTitle, language === "urdu" && getUrduStyle(20)]}>{t("dashboard.title", language)}</Text>
+        <Text style={[styles.headerTitle, getStyleForDynamicText(t("dashboard.title", language), 20)]}>{t("dashboard.title", language)}</Text>
       </View>
-      <View style={styles.content}>
-        <Text style={[styles.title, language === "urdu" && getUrduStyle(24)]}>{t("dashboard.title", language)}</Text>
-        <Text style={[styles.shopName, language === "urdu" && getUrduStyle(18)]}>{shop?.shopName ?? "My Shop"}</Text>
+      <View style={[styles.content, isRtl && styles.rtl]}>
+        <Text style={[styles.title, getStyleForDynamicText(t("dashboard.title", language), 24)]}>{t("dashboard.title", language)}</Text>
+        <Text style={[styles.shopName, getStyleForDynamicText(shop?.shopName ?? "My Shop", 18)]}>{shop?.shopName ?? "My Shop"}</Text>
       </View>
     </View>
   );
@@ -50,13 +51,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: 24,
   },
+  rtl: { direction: "rtl" },
   headerRow: {
     marginTop: 14,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 16,
   },
-  menuBtn: { padding: 8, marginLeft: -8 },
+  menuBtn: { padding: 8, marginStart: -8 },
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",

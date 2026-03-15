@@ -18,6 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { CustomersStackParamList } from "../../navigation/types";
 import { colors } from "../../theme/colors";
 import { useTailorAuthStore } from "../../stores/tailorAuthStore";
+import { useAppStore } from "../../stores/appStore";
 import { useCustomerStore } from "../../stores/customerStore";
 import { customerSchema, type CustomerInput } from "../../utils/validation";
 import { generateId } from "../../utils/customerStorage";
@@ -32,6 +33,8 @@ export function AddEditCustomerScreen() {
   const customerId = (route.params as { customerId?: string } | undefined)?.customerId;
   const isEdit = Boolean(customerId);
   const auth = useTailorAuthStore((s) => s.auth);
+  const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
   const shopId = auth?.shopId ?? "";
   const { getCustomerById, addCustomer, updateCustomer, loadCustomers } = useCustomerStore();
   const existing = customerId ? getCustomerById(customerId) : null;
@@ -103,25 +106,25 @@ export function AddEditCustomerScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}
+      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={20}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, isRtl && styles.rtl]}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
+          <MaterialCommunityIcons name={isRtl ? "arrow-right" : "arrow-left"} size={24} color={colors.cream} />
         </Pressable>
         <Text style={styles.headerTitle}>{isEdit ? "Edit Customer" : "Add Customer"}</Text>
       </View>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, isRtl && styles.rtl]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.card}>
+        <View style={[styles.card, isRtl && styles.rtl]}>
           <Text style={styles.label}>Full Name *</Text>
           <TextInput
-            style={[styles.input, errors.name && styles.inputError]}
+            style={[styles.input, errors.name && styles.inputError, isRtl && styles.inputRtl]}
             placeholder="Customer name"
             placeholderTextColor={colors.creamMuted}
             value={name}
@@ -131,7 +134,7 @@ export function AddEditCustomerScreen() {
 
           <Text style={[styles.label, { marginTop: 16 }]}>Phone Number *</Text>
           <TextInput
-            style={[styles.input, errors.phone && styles.inputError]}
+            style={[styles.input, errors.phone && styles.inputError, isRtl && styles.inputRtl]}
             placeholder="03XX-XXXXXXX (11 digits)"
             placeholderTextColor={colors.creamMuted}
             value={phone}
@@ -142,7 +145,7 @@ export function AddEditCustomerScreen() {
 
           <Text style={[styles.label, { marginTop: 16 }]}>Address (optional)</Text>
           <TextInput
-            style={[styles.input, styles.inputMultiline]}
+            style={[styles.input, styles.inputMultiline, isRtl && styles.inputRtl]}
             placeholder="Address"
             placeholderTextColor={colors.creamMuted}
             value={address}
@@ -153,7 +156,7 @@ export function AddEditCustomerScreen() {
 
           <Text style={[styles.label, { marginTop: 16 }]}>Notes (optional)</Text>
           <TextInput
-            style={[styles.input, styles.inputMultiline]}
+            style={[styles.input, styles.inputMultiline, isRtl && styles.inputRtl]}
             placeholder="Any special notes about this customer..."
             placeholderTextColor={colors.creamMuted}
             value={notes}
@@ -175,8 +178,10 @@ export function AddEditCustomerScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  rtl: { direction: "rtl" },
   header: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12 },
-  backBtn: { padding: 8, marginLeft: -8 },
+  backBtn: { padding: 8, marginStart: -8 },
+  inputRtl: { textAlign: "right" },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",

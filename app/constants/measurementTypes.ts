@@ -1,16 +1,15 @@
 import type { MeasurementType } from "../types/customers";
+import { t } from "../utils/lang";
+import type { AppLanguage } from "../utils/lang";
 
-export const MEASUREMENT_TYPES: { type: MeasurementType; label: string; labelUrdu: string }[] = [
-  { type: "kameez_shalwar", label: "Kameez Shalwar", labelUrdu: "کمیز شلوار" },
-  { type: "kurta_pajama", label: "Kurta Pajama", labelUrdu: "کرتہ پاجامہ" },
-  { type: "pant_kot", label: "Pant Kot", labelUrdu: "پینٹ کوٹ" },
-  { type: "waist_kot", label: "Waist Kot", labelUrdu: "ویسٹ کوٹ" },
+/** All measurement type ids. Labels come from locale: t("measurementTypes." + type, language). */
+export const MEASUREMENT_TYPES: MeasurementType[] = [
+  "kameez_shalwar",
+  "kurta_pajama",
+  "pant_kot",
+  "waist_kot",
 ];
 
-export function getMeasurementTypeLabel(type: MeasurementType): string {
-  return MEASUREMENT_TYPES.find((t) => t.type === type)?.label ?? type;
-}
-
-export function getMeasurementTypeLabelUrdu(type: MeasurementType): string {
-  return MEASUREMENT_TYPES.find((t) => t.type === type)?.labelUrdu ?? "";
+export function getMeasurementTypeLabel(type: MeasurementType, language: AppLanguage): string {
+  return t(`measurementTypes.${type}`, language);
 }

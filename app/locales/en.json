@@ -13,7 +13,8 @@
     "password": "Password",
     "confirmPassword": "Confirm password",
     "error": "Something went wrong.",
-    "back": "Back"
+    "back": "Back",
+    "goBack": "Go back"
   },
   "auth": {
     "login": "Login",
@@ -68,16 +69,28 @@
     "customersCount": "customers",
     "searchPlaceholder": "Search by name or phone...",
     "deleteCustomer": "Delete Customer",
+    "notFound": "Customer not found",
     "deleteConfirm": "Delete {{name}}? This will also delete all their measurements.",
     "measurements": "Measurements",
     "measurement": "measurement",
-    "measurementPlural": "measurements"
+    "measurementPlural": "measurements",
+    "savedBadge": "Saved",
+    "addBadge": "Add",
+    "viewEdit": "View / Edit"
   },
   "measurement": {
     "saveMeasurement": "Save Measurement",
     "notesOptional": "Notes (optional)",
     "saved": "Measurement saved.",
     "deleteConfirm": "Remove this measurement for this customer?",
+    "section_kameez": "Kameez",
+    "section_shalwar": "Shalwar",
+    "section_special_notes": "Special Notes",
+    "section_kurta": "Kurta",
+    "section_pajama": "Pajama",
+    "section_coat": "Coat",
+    "section_pant": "Pant",
+    "section_waist_kot": "Waist Kot",
     "qameez_length": "Kameez Length",
     "chaati": "Chest",
     "kamar": "Waist",
@@ -111,6 +124,12 @@
     "crotch": "Crotch",
     "length": "Waist Kot Length",
     "armhole": "Armhole"
+  },
+  "measurementTypes": {
+    "kameez_shalwar": "Kameez Shalwar",
+    "kurta_pajama": "Kurta Pajama",
+    "pant_kot": "Pant Kot",
+    "waist_kot": "Waist Kot"
   },
   "language": {
     "en": "English",

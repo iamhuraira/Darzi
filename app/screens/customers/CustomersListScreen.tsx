@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import type { CustomersStackParamList } from "../../navigation/types";
 import { colors, borderRadius } from "../../theme/colors";
-import { getUrduStyle } from "../../theme/fonts";
+import { getStyleForDynamicText } from "../../theme/fonts";
 import { useTailorAuthStore } from "../../stores/tailorAuthStore";
 import { useCustomerStore } from "../../stores/customerStore";
 import { useAppStore } from "../../stores/appStore";
@@ -43,6 +43,7 @@ function CustomerCard({
   measurementLabel,
   measurementPluralLabel,
   language,
+  isRtl,
 }: {
   customer: Customer;
   measurementCount: number;
@@ -53,49 +54,52 @@ function CustomerCard({
   measurementLabel: string;
   measurementPluralLabel: string;
   language: string;
+  isRtl: boolean;
 }) {
   const initial = customer.name.trim().charAt(0).toUpperCase() || "?";
-  const isUrdu = language === "urdu";
+  const badgeTextStr = `${measurementCount} ${measurementCount === 1 ? measurementLabel : measurementPluralLabel}`;
   const renderRightActions = () => (
     <Pressable style={styles.deleteAction} onPress={onDelete}>
       <MaterialCommunityIcons name="delete-outline" size={26} color="#fff" />
-      <Text style={[styles.deleteActionText, isUrdu && getUrduStyle(12)]}>{deleteLabel}</Text>
+      <Text style={[styles.deleteActionText, getStyleForDynamicText(deleteLabel, 12)]}>{deleteLabel}</Text>
     </Pressable>
   );
 
   return (
-    <Swipeable renderRightActions={renderRightActions}>
-      <Pressable style={({ pressed }) => [styles.card, pressed && styles.cardPressed]} onPress={onPress}>
-        <View style={styles.card}>
-        <View style={styles.avatarWrap}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initial}</Text>
-          </View>
-        </View>
-        <View style={styles.cardBody}>
-          <Text style={[styles.cardName, isUrdu && getUrduStyle(17)]} numberOfLines={1}>{customer.name}</Text>
-          <View style={styles.phoneRow}>
-            <MaterialCommunityIcons name="phone-outline" size={14} color={colors.mutedGray} />
-            <Text style={styles.cardPhone}>{customer.phone}</Text>
-          </View>
-          <View style={styles.cardMeta}>
-            <View style={styles.badgePill}>
-              <MaterialCommunityIcons name="ruler-square" size={12} color={colors.gold} />
-              <Text style={[styles.badgeText, isUrdu && getUrduStyle(11)]}>
-                {measurementCount} {measurementCount === 1 ? measurementLabel : measurementPluralLabel}
-              </Text>
+    <View style={styles.cardItemWrap}>
+      <Swipeable renderRightActions={renderRightActions}>
+        <Pressable style={({ pressed }) => [styles.cardOuter, pressed && styles.cardPressed]} onPress={onPress}>
+          <View style={[styles.card, isRtl && styles.rtl]}>
+          <View style={styles.avatarWrap}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{initial}</Text>
             </View>
-            {lastOrderDate ? (
-              <Text style={styles.lastOrder}>{lastOrderDate}</Text>
-            ) : null}
           </View>
-        </View>
-        <View style={styles.chevronWrap}>
-          <MaterialCommunityIcons name="chevron-right" size={24} color={colors.mutedGray} />
-        </View>
-        </View>
-      </Pressable>
-    </Swipeable>
+          <View style={styles.cardBody}>
+            <Text style={[styles.cardName, getStyleForDynamicText(customer.name, 17)]} numberOfLines={1}>{customer.name}</Text>
+            <View style={[styles.phoneRow, isRtl && styles.rtl]}>
+              <MaterialCommunityIcons name="phone-outline" size={14} color={colors.mutedGray} />
+              <Text style={styles.cardPhone}>{customer.phone}</Text>
+            </View>
+            <View style={[styles.cardMeta, isRtl && styles.rtl]}>
+              <View style={styles.badgePill}>
+                <MaterialCommunityIcons name="ruler-square" size={12} color={colors.gold} />
+                <Text style={[styles.badgeText, getStyleForDynamicText(badgeTextStr, 11)]}>
+                  {measurementCount} {measurementCount === 1 ? measurementLabel : measurementPluralLabel}
+                </Text>
+              </View>
+              {lastOrderDate ? (
+                <Text style={styles.lastOrder}>{lastOrderDate}</Text>
+              ) : null}
+            </View>
+          </View>
+          <View style={styles.chevronWrap}>
+            <MaterialCommunityIcons name={isRtl ? "chevron-left" : "chevron-right"} size={24} color={colors.mutedGray} />
+          </View>
+          </View>
+        </Pressable>
+      </Swipeable>
+    </View>
   );
 }
 
@@ -103,6 +107,7 @@ export function CustomersListScreen() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<Nav>();
   const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
   const auth = useTailorAuthStore((s) => s.auth);
   const shopId = auth?.shopId ?? "";
   const { customers, loadCustomers, deleteCustomer, measurements } = useCustomerStore();
@@ -146,8 +151,8 @@ export function CustomersListScreen() {
   };
 
   return (
-    <GestureHandlerRootView style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <View style={[styles.header, { paddingTop: insets.top > 0 ? 8 : 16 }]}>
+    <GestureHandlerRootView style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}>
+      <View style={[styles.header, { paddingTop: insets.top > 0 ? 8 : 16 }, isRtl && styles.rtl]}>
         <Pressable
           onPress={() => (navigation.getParent() as { openDrawer?: () => void })?.openDrawer?.()}
           style={styles.menuBtn}
@@ -155,20 +160,19 @@ export function CustomersListScreen() {
           <MaterialCommunityIcons name="menu" size={26} color={colors.cream} />
         </Pressable>
         <View style={styles.headerCenter}>
-          <Text style={[styles.headerTitle, language === "urdu" && getUrduStyle(22)]}>{t("customers.title", language)}</Text>
-          <Text style={[styles.headerSubtitle, language === "urdu" && getUrduStyle(13)]}>{t("customers.subtitle", language)}</Text>
+          <Text style={[styles.headerTitle, getStyleForDynamicText(t("customers.title", language), 22)]}>{t("customers.title", language)}</Text>
         </View>
         <Pressable onPress={() => setSearchVisible((v) => !v)} style={styles.iconBtn}>
           <MaterialCommunityIcons name={searchVisible ? "close" : "magnify"} size={24} color={colors.cream} />
         </Pressable>
       </View>
       {searchVisible && (
-        <View style={styles.searchWrap}>
+        <View style={[styles.searchWrap, isRtl && styles.rtl]}>
           <View style={styles.searchIcon}>
             <MaterialCommunityIcons name="magnify" size={20} color={colors.creamMuted} />
           </View>
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, isRtl && styles.inputRtl]}
             placeholder={t("customers.searchPlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={query}
@@ -184,8 +188,8 @@ export function CustomersListScreen() {
               <View style={styles.emptyIconWrap}>
                 <MaterialCommunityIcons name="account-group-outline" size={56} color={colors.mutedGray} />
               </View>
-              <Text style={[styles.emptyTitle, language === "urdu" && getUrduStyle(20)]}>{t("customers.emptyNoCustomers", language)}</Text>
-              <Text style={[styles.emptySub, language === "urdu" && getUrduStyle(14)]}>{t("customers.emptyAddFirst", language)}</Text>
+              <Text style={[styles.emptyTitle, getStyleForDynamicText(t("customers.emptyNoCustomers", language), 20)]}>{t("customers.emptyNoCustomers", language)}</Text>
+              <Text style={[styles.emptySub, getStyleForDynamicText(t("customers.emptyAddFirst", language), 14)]}>{t("customers.emptyAddFirst", language)}</Text>
               <View style={styles.addBtnEmptyWrap}>
                 <Pressable
                   style={({ pressed }) => [styles.addBtnEmptyOuter, pressed && styles.btnPressed]}
@@ -193,7 +197,7 @@ export function CustomersListScreen() {
                 >
                   <View style={styles.addBtnEmpty}>
                     <MaterialCommunityIcons name="plus" size={22} color={colors.cream} />
-                    <Text style={[styles.addBtnText, language === "urdu" && getUrduStyle(16)]}>{t("customers.addCustomer", language)}</Text>
+                    <Text style={[styles.addBtnText, getStyleForDynamicText(t("customers.addCustomer", language), 16)]}>{t("customers.addCustomer", language)}</Text>
                   </View>
                 </Pressable>
               </View>
@@ -203,22 +207,22 @@ export function CustomersListScreen() {
               <View style={styles.emptyIconWrap}>
                 <MaterialCommunityIcons name="text-search" size={56} color={colors.mutedGray} />
               </View>
-              <Text style={[styles.emptyTitle, language === "urdu" && getUrduStyle(20)]}>{t("customers.noMatches", language)}</Text>
-              <Text style={[styles.emptySub, language === "urdu" && getUrduStyle(14)]}>{t("customers.noMatchesSub", language)}</Text>
+              <Text style={[styles.emptyTitle, getStyleForDynamicText(t("customers.noMatches", language), 20)]}>{t("customers.noMatches", language)}</Text>
+              <Text style={[styles.emptySub, getStyleForDynamicText(t("customers.noMatchesSub", language), 14)]}>{t("customers.noMatchesSub", language)}</Text>
             </View>
           )}
         </View>
       ) : (
         <>
           {customers.length > 0 && (
-            <Text style={[styles.resultCount, language === "urdu" && getUrduStyle(13)]}>
+            <Text style={[styles.resultCount, getStyleForDynamicText(`${filtered.length} ${filtered.length === 1 ? t("customers.customer", language) : t("customers.customersCount", language)}`, 13)]}>
               {filtered.length} {filtered.length === 1 ? t("customers.customer", language) : t("customers.customersCount", language)}
             </Text>
           )}
           <FlatList
             data={filtered}
             keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContent}
+            contentContainerStyle={[styles.listContent, isRtl && styles.rtl]}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <CustomerCard
@@ -231,6 +235,7 @@ export function CustomersListScreen() {
                 measurementLabel={t("customers.measurement", language)}
                 measurementPluralLabel={t("customers.measurementPlural", language)}
                 language={language}
+                isRtl={isRtl}
               />
             )}
           />
@@ -243,6 +248,8 @@ export function CustomersListScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  rtl: { direction: "rtl" },
+  inputRtl: { textAlign: "right" },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -251,7 +258,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  menuBtn: { padding: 8, marginLeft: -8 },
+  menuBtn: { padding: 8, marginStart: -8 },
   headerCenter: { flex: 1, marginLeft: 4 },
   headerTitle: {
     fontSize: 22,
@@ -294,13 +301,14 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   listContent: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 100 },
+  cardItemWrap: { marginBottom: 12 },
+  cardOuter: {},
   card: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.surface,
     borderRadius: borderRadius.card,
     padding: 16,
-    marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
     shadowColor: "#000",
@@ -310,7 +318,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardPressed: { opacity: 0.92 },
-  avatarWrap: { marginRight: 14 },
+  avatarWrap: { marginEnd: 14 },
   avatar: {
     width: 48,
     height: 48,
@@ -345,7 +353,7 @@ const styles = StyleSheet.create({
   },
   badgeText: { fontSize: 11, color: colors.gold, fontWeight: "600" },
   lastOrder: { fontSize: 12, color: colors.mutedGray },
-  chevronWrap: { paddingLeft: 4 },
+  chevronWrap: { paddingStart: 4 },
   deleteAction: {
     backgroundColor: colors.error,
     justifyContent: "center",

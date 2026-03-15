@@ -17,13 +17,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { CustomersStackParamList } from "../../navigation/types";
 import { colors } from "../../theme/colors";
-import { getUrduStyle } from "../../theme/fonts";
+import { getStyleForDynamicText } from "../../theme/fonts";
 import { useTailorAuthStore } from "../../stores/tailorAuthStore";
 import { useCustomerStore } from "../../stores/customerStore";
 import { getMeasurementTypeLabel } from "../../constants/measurementTypes";
 import { getSectionsForType, getEmptyFieldsForType } from "../../utils/measurementFields";
 import { generateId } from "../../utils/customerStorage";
-import { t, tLabel } from "../../utils/lang";
+import { t } from "../../utils/lang";
 import type { Measurement, MeasurementType } from "../../types/customers";
 import { useAppStore } from "../../stores/appStore";
 
@@ -38,6 +38,7 @@ export function MeasurementFormScreen() {
   const auth = useTailorAuthStore((s) => s.auth);
   const shopId = auth?.shopId ?? "";
   const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
   const units = useAppStore((s) => s.units);
   const { getCustomerById, getMeasurementByType, saveMeasurement, deleteMeasurement, loadMeasurements, measurements } = useCustomerStore();
   const customer = getCustomerById(customerId);
@@ -114,21 +115,21 @@ export function MeasurementFormScreen() {
     );
   }
 
-  const title = getMeasurementTypeLabel(type);
+  const title = getMeasurementTypeLabel(type, language);
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}
+      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={20}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, isRtl && styles.rtl]}>
         <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
+          <MaterialCommunityIcons name={isRtl ? "arrow-right" : "arrow-left"} size={24} color={colors.cream} />
         </Pressable>
         <View style={styles.headerCenter}>
-          <Text style={[styles.headerTitle, language === "urdu" && getUrduStyle(18)]}>{title}</Text>
-          <Text style={[styles.headerSubtitle, language === "urdu" && getUrduStyle(13)]}>{customer?.name}</Text>
+          <Text style={[styles.headerTitle, getStyleForDynamicText(title, 18)]}>{title}</Text>
+          <Text style={[styles.headerSubtitle, getStyleForDynamicText(customer?.name ?? "", 13)]}>{customer?.name}</Text>
         </View>
         {existing ? (
           <Pressable onPress={handleDelete} style={styles.iconBtn}>
@@ -137,32 +138,33 @@ export function MeasurementFormScreen() {
         ) : <View style={styles.iconBtn} />}
       </View>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, isRtl && styles.rtl]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {sections.map((section) => (
-          <View key={section.title} style={styles.section}>
-            <View style={styles.sectionDivider}>
+        {sections.map((section) => {
+          const sectionTitle = t(`measurement.section_${section.titleKey}`, language);
+          return (
+          <View key={section.titleKey} style={[styles.section, isRtl && styles.rtl]}>
+            <View style={[styles.sectionDivider, isRtl && styles.rtl]}>
               <View style={styles.dividerLine} />
-              <Text style={[styles.sectionTitle, language === "urdu" && getUrduStyle(14)]}>
-                {language === "english" ? section.title : section.titleUrdu}
+              <Text style={[styles.sectionTitle, getStyleForDynamicText(sectionTitle, 24)]}>
+                {sectionTitle}
               </Text>
               <View style={styles.dividerLine} />
             </View>
             {section.fields.map((f) => {
               const isMultiline = f.key === "special_instructions";
-              const label = tLabel(`measurement.${f.key}`, language);
+              const fieldLabel = t(`measurement.${f.key}`, language);
               return (
-                <View key={f.key} style={isMultiline ? styles.fieldRowMultiline : styles.fieldRow}>
+                <View key={f.key} style={[isMultiline ? styles.fieldRowMultiline : styles.fieldRow, isRtl && styles.rtl]}>
                   <View style={styles.fieldLabelWrap}>
-                    {label.primary ? <Text style={[styles.fieldLabelPrimary, language === "urdu" && getUrduStyle(15)]}>{label.primary}</Text> : null}
-                    {label.secondary ? <Text style={styles.fieldLabelSecondary}>{label.secondary}</Text> : null}
+                    <Text style={[styles.fieldLabelPrimary, getStyleForDynamicText(fieldLabel, 15)]}>{fieldLabel}</Text>
                   </View>
                   {isMultiline ? (
                     <TextInput
-                      style={[styles.input, styles.inputMultiline]}
-                      placeholder={label.primary || "Special instructions..."}
+                      style={[styles.input, styles.inputMultiline, isRtl && styles.inputRtl]}
+                      placeholder={fieldLabel}
                       placeholderTextColor={colors.creamMuted}
                       value={fields[f.key] ?? ""}
                       onChangeText={(v) => updateField(f.key, v)}
@@ -170,9 +172,9 @@ export function MeasurementFormScreen() {
                       numberOfLines={3}
                     />
                   ) : (
-                    <View style={styles.inputWithUnit}>
+                    <View style={[styles.inputWithUnit, isRtl && styles.rtl]}>
                       <TextInput
-                        style={styles.input}
+                        style={[styles.input, isRtl && styles.inputRtl]}
                         placeholder={unitLabel}
                         placeholderTextColor={colors.creamMuted}
                         value={fields[f.key] ?? ""}
@@ -186,11 +188,12 @@ export function MeasurementFormScreen() {
               );
             })}
           </View>
-        ))}
-        <View style={styles.section}>
-          <Text style={[styles.label, language === "urdu" && getUrduStyle(14)]}>{t("measurement.notesOptional", language)}</Text>
+          );
+        })}
+        <View style={[styles.section, isRtl && styles.rtl]}>
+          <Text style={[styles.label, getStyleForDynamicText(t("measurement.notesOptional", language), 14)]}>{t("measurement.notesOptional", language)}</Text>
           <TextInput
-            style={[styles.input, styles.inputMultiline]}
+            style={[styles.input, styles.inputMultiline, isRtl && styles.inputRtl]}
             placeholder="Notes"
             placeholderTextColor={colors.creamMuted}
             value={notes}
@@ -200,10 +203,12 @@ export function MeasurementFormScreen() {
           />
         </View>
         <Pressable
-          style={({ pressed }) => [styles.primaryBtn, pressed && styles.btnPressed]}
+          style={({ pressed }) => [styles.primaryBtnOuter, pressed && styles.btnPressed]}
           onPress={handleSave}
         >
-          <Text style={[styles.primaryBtnText, language === "urdu" && getUrduStyle(16)]}>{t("measurement.saveMeasurement", language)}</Text>
+          <View style={styles.primaryBtn}>
+            <Text style={[styles.primaryBtnText, getStyleForDynamicText(t("measurement.saveMeasurement", language), 16)]}>{t("measurement.saveMeasurement", language)}</Text>
+          </View>
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -212,8 +217,9 @@ export function MeasurementFormScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  rtl: { direction: "rtl" },
   header: { flexDirection: "row", alignItems: "center", paddingHorizontal: 16, paddingVertical: 12 },
-  backBtn: { padding: 8, marginLeft: -8 },
+  backBtn: { padding: 8, marginStart: -8 },
   headerCenter: { flex: 1, marginHorizontal: 8 },
   headerTitle: { fontSize: 18, fontWeight: "600", color: colors.cream, fontFamily: "Poppins_600SemiBold" },
   headerSubtitle: { fontSize: 13, color: colors.mutedGray, marginTop: 2 },
@@ -250,12 +256,24 @@ const styles = StyleSheet.create({
     minWidth: 80,
   },
   inputMultiline: { minHeight: 80, textAlignVertical: "top" },
+  inputRtl: { textAlign: "right" },
   label: { fontSize: 14, fontWeight: "600", color: colors.cream, marginBottom: 8 },
+  primaryBtnOuter: {
+    minHeight: 52,
+    alignSelf: "stretch",
+    marginTop: 8,
+  },
   primaryBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.copper,
     borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: "#A35220",
     paddingVertical: 16,
-    alignItems: "center",
+    paddingHorizontal: 24,
   },
   primaryBtnText: { fontSize: 16, fontWeight: "600", color: colors.cream, fontFamily: "Poppins_600SemiBold" },
   btnPressed: { opacity: 0.9 },

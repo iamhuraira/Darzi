@@ -7,6 +7,8 @@ export interface FieldDef {
 }
 
 export interface SectionDef {
+  /** Locale key for title, e.g. "kameez" → t("measurement.section_kameez", language) */
+  titleKey: string;
   title: string;
   titleUrdu: string;
   fields: FieldDef[];
@@ -16,8 +18,9 @@ const INCH_SUFFIX = " (inches)";
 
 export const KAMEEZ_SHALWAR_SECTIONS: SectionDef[] = [
   {
+    titleKey: "kameez",
     title: "Kameez",
-    titleUrdu: "کمیز",
+    titleUrdu: "قمیض",
     fields: [
       { key: "qameez_length", label: "Kameez Length", labelUrdu: "قمیض لمبائی" },
       { key: "chaati", label: "Chest", labelUrdu: "چھاتی" },
@@ -31,6 +34,7 @@ export const KAMEEZ_SHALWAR_SECTIONS: SectionDef[] = [
     ],
   },
   {
+    titleKey: "shalwar",
     title: "Shalwar",
     titleUrdu: "شلوار",
     fields: [
@@ -41,6 +45,7 @@ export const KAMEEZ_SHALWAR_SECTIONS: SectionDef[] = [
     ],
   },
   {
+    titleKey: "special_notes",
     title: "Special Notes",
     titleUrdu: "خصوصی ہدایات",
     fields: [{ key: "special_instructions", label: "Special Instructions", labelUrdu: "خصوصی ہدایات" }],
@@ -49,6 +54,7 @@ export const KAMEEZ_SHALWAR_SECTIONS: SectionDef[] = [
 
 export const KURTA_PAJAMA_SECTIONS: SectionDef[] = [
   {
+    titleKey: "kurta",
     title: "Kurta",
     titleUrdu: "کرتہ",
     fields: [
@@ -64,6 +70,7 @@ export const KURTA_PAJAMA_SECTIONS: SectionDef[] = [
     ],
   },
   {
+    titleKey: "pajama",
     title: "Pajama",
     titleUrdu: "پاجامہ",
     fields: [
@@ -74,6 +81,7 @@ export const KURTA_PAJAMA_SECTIONS: SectionDef[] = [
     ],
   },
   {
+    titleKey: "special_notes",
     title: "Special Notes",
     titleUrdu: "خصوصی ہدایات",
     fields: [{ key: "special_instructions", label: "Special Instructions", labelUrdu: "خصوصی ہدایات" }],
@@ -82,6 +90,7 @@ export const KURTA_PAJAMA_SECTIONS: SectionDef[] = [
 
 export const PANT_KOT_SECTIONS: SectionDef[] = [
   {
+    titleKey: "coat",
     title: "Coat",
     titleUrdu: "کوٹ",
     fields: [
@@ -94,6 +103,7 @@ export const PANT_KOT_SECTIONS: SectionDef[] = [
     ],
   },
   {
+    titleKey: "pant",
     title: "Pant",
     titleUrdu: "پینٹ",
     fields: [
@@ -110,6 +120,7 @@ export const PANT_KOT_SECTIONS: SectionDef[] = [
 
 export const WAIST_KOT_SECTIONS: SectionDef[] = [
   {
+    titleKey: "waist_kot",
     title: "Waist Kot",
     titleUrdu: "ویسٹ کوٹ",
     fields: [

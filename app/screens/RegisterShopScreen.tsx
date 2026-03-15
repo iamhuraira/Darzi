@@ -17,7 +17,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { RootStackParamList } from "../navigation/types";
 import { colors } from "../theme/colors";
-import { getUrduStyle } from "../theme/fonts";
+import { getStyleForDynamicText } from "../theme/fonts";
 import { shopRegistrationSchema, type ShopRegistrationInput } from "../utils/validation";
 import { generateId, setTailorShop, setTailorUser } from "../utils/tailorStorage";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
@@ -36,6 +36,7 @@ export function RegisterShopScreen() {
   const step1 = route.params?.step1;
   const setAuth = useTailorAuthStore((s) => s.setAuth);
   const language = useAppStore((s) => s.language);
+  const isRtl = language === "urdu";
 
   const [shopName, setShopName] = useState("");
   const [shopPhone, setShopPhone] = useState("");
@@ -118,31 +119,31 @@ export function RegisterShopScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}
+      style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={20}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, isRtl && styles.rtl]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerRow}>
+        <View style={[styles.headerRow, isRtl && styles.rtl]}>
           <Pressable onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color={colors.cream} />
+            <MaterialCommunityIcons name={isRtl ? "arrow-right" : "arrow-left"} size={24} color={colors.cream} />
           </Pressable>
         </View>
-        <Text style={[styles.title, language === "urdu" && getUrduStyle(22)]}>{t("auth.registerShop", language)}</Text>
-        <Text style={[styles.subtitle, language === "urdu" && getUrduStyle(14)]}>{t("auth.step2Shop", language)}</Text>
+        <Text style={[styles.title, getStyleForDynamicText(t("auth.registerShop", language), 22)]}>{t("auth.registerShop", language)}</Text>
+        <Text style={[styles.subtitle, getStyleForDynamicText(t("auth.step2Shop", language), 14)]}>{t("auth.step2Shop", language)}</Text>
         <View style={styles.stepDots}>
           <View style={[styles.dot, styles.dotInactive]} />
           <View style={[styles.dot, styles.dotActive]} />
         </View>
 
-        <View style={styles.card}>
-          <Text style={[styles.label, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopName", language)}</Text>
+        <View style={[styles.card, isRtl && styles.rtl]}>
+          <Text style={[styles.label, getStyleForDynamicText(t("auth.shopName", language), 14)]}>{t("auth.shopName", language)}</Text>
           <TextInput
-            style={[styles.input, errors.shopName && styles.inputError]}
+            style={[styles.input, errors.shopName && styles.inputError, isRtl && styles.inputRtl]}
             placeholder={t("auth.shopName", language)}
             placeholderTextColor={colors.creamMuted}
             value={shopName}
@@ -150,9 +151,9 @@ export function RegisterShopScreen() {
           />
           {errors.shopName ? <Text style={styles.errorText}>{errors.shopName}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopPhone", language)}</Text>
+          <Text style={[styles.label, { marginTop: 16 }, getStyleForDynamicText(t("auth.shopPhone", language), 14)]}>{t("auth.shopPhone", language)}</Text>
           <TextInput
-            style={[styles.input, errors.shopPhone && styles.inputError]}
+            style={[styles.input, errors.shopPhone && styles.inputError, isRtl && styles.inputRtl]}
             placeholder={t("auth.phonePlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={shopPhone}
@@ -161,7 +162,7 @@ export function RegisterShopScreen() {
           />
           {errors.shopPhone ? <Text style={styles.errorText}>{errors.shopPhone}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.city", language)}</Text>
+          <Text style={[styles.label, { marginTop: 16 }, getStyleForDynamicText(t("auth.city", language), 14)]}>{t("auth.city", language)}</Text>
           <View style={styles.cityRow}>
             {CITIES.map((c) => (
               <Pressable
@@ -175,9 +176,9 @@ export function RegisterShopScreen() {
           </View>
           {errors.city ? <Text style={styles.errorText}>{errors.city}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopAddress", language)}</Text>
+          <Text style={[styles.label, { marginTop: 16 }, getStyleForDynamicText(t("auth.shopAddress", language), 14)]}>{t("auth.shopAddress", language)}</Text>
           <TextInput
-            style={[styles.input, styles.inputMultiline, errors.address && styles.inputError]}
+            style={[styles.input, styles.inputMultiline, errors.address && styles.inputError, isRtl && styles.inputRtl]}
             placeholder={t("auth.shopAddressPlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={address}
@@ -188,9 +189,9 @@ export function RegisterShopScreen() {
           />
           {errors.address ? <Text style={styles.errorText}>{errors.address}</Text> : null}
 
-          <Text style={[styles.label, { marginTop: 16 }, language === "urdu" && getUrduStyle(14)]}>{t("auth.shopDescription", language)}</Text>
+          <Text style={[styles.label, { marginTop: 16 }, getStyleForDynamicText(t("auth.shopDescription", language), 14)]}>{t("auth.shopDescription", language)}</Text>
           <TextInput
-            style={[styles.input, styles.inputMultiline]}
+            style={[styles.input, styles.inputMultiline, isRtl && styles.inputRtl]}
             placeholder={t("auth.shopDescriptionPlaceholder", language)}
             placeholderTextColor={colors.creamMuted}
             value={description}
@@ -210,7 +211,7 @@ export function RegisterShopScreen() {
             {loading ? (
               <ActivityIndicator color={colors.cream} />
             ) : (
-              <Text style={[styles.primaryBtnText, language === "urdu" && getUrduStyle(16)]}>{t("auth.createMyShop", language)}</Text>
+              <Text style={[styles.primaryBtnText, getStyleForDynamicText(t("auth.createMyShop", language), 16)]}>{t("auth.createMyShop", language)}</Text>
             )}
           </View>
         </Pressable>
@@ -221,9 +222,11 @@ export function RegisterShopScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  rtl: { direction: "rtl" },
   scrollContent: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 24, paddingVertical: 24, paddingBottom: 32 },
   headerRow: { flexDirection: "row", marginBottom: 8 },
-  backBtn: { padding: 8, marginLeft: -8 },
+  backBtn: { padding: 8, marginStart: -8 },
+  inputRtl: { textAlign: "right" },
   title: {
     fontSize: 22,
     fontWeight: "600",
