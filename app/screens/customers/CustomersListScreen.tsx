@@ -12,7 +12,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import type { CustomersStackParamList } from "../../navigation/types";
 import { colors, borderRadius } from "../../theme/colors";
 import { getStyleForDynamicText } from "../../theme/fonts";
@@ -67,7 +66,7 @@ function CustomerCard({
 
   return (
     <View style={styles.cardItemWrap}>
-      <Swipeable renderRightActions={renderRightActions}>
+      <View>
         <Pressable style={({ pressed }) => [styles.cardOuter, pressed && styles.cardPressed]} onPress={onPress}>
           <View style={[styles.card, isRtl && styles.rtl]}>
           <View style={styles.avatarWrap}>
@@ -94,11 +93,15 @@ function CustomerCard({
             </View>
           </View>
           <View style={styles.chevronWrap}>
+            <Pressable style={styles.deleteAction} onPress={onDelete}>
+              <MaterialCommunityIcons name="delete-outline" size={24} color="#fff" />
+            </Pressable>
             <MaterialCommunityIcons name={isRtl ? "chevron-left" : "chevron-right"} size={24} color={colors.mutedGray} />
+            
           </View>
           </View>
         </Pressable>
-      </Swipeable>
+      </View>
     </View>
   );
 }
@@ -151,7 +154,7 @@ export function CustomersListScreen() {
   };
 
   return (
-    <GestureHandlerRootView style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }, isRtl && styles.rtl]}>
       <View style={[styles.header, { paddingTop: insets.top > 0 ? 8 : 16 }, isRtl && styles.rtl]}>
         <Pressable
           onPress={() => (navigation.getParent() as { openDrawer?: () => void })?.openDrawer?.()}
@@ -242,7 +245,7 @@ export function CustomersListScreen() {
 
         </>
       )}
-    </GestureHandlerRootView>
+    </View>
   );
 }
 
@@ -353,14 +356,21 @@ const styles = StyleSheet.create({
   },
   badgeText: { fontSize: 11, color: colors.gold, fontWeight: "600" },
   lastOrder: { fontSize: 12, color: colors.mutedGray },
-  chevronWrap: { paddingStart: 4 },
+  chevronWrap: { paddingStart: 4,
+    paddingEnd: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 24,
+  },
   deleteAction: {
     backgroundColor: colors.error,
     justifyContent: "center",
     alignItems: "center",
-    width: 84,
+
+    width: 34,
+    height: 34,
     borderRadius: borderRadius.card,
-    marginBottom: 12,
   },
   deleteActionText: { color: "#fff", fontSize: 12, fontWeight: "600", marginTop: 4 },
   empty: {
