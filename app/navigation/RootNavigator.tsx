@@ -8,6 +8,7 @@ import { SignupScreen } from "../screens/SignupScreen";
 import { WelcomeScreen } from "../screens/WelcomeScreen";
 import { CustomDrawerContent } from "./DrawerContent";
 import { CustomersStack } from "./CustomersStack";
+import { OrdersStack } from "./OrdersStack";
 import type { DrawerParamList, RootStackParamList } from "./types";
 import { useTailorAuthStore } from "../stores/tailorAuthStore";
 
@@ -43,6 +44,7 @@ export function RootNavigator() {
       >
         <Drawer.Screen name="Dashboard" component={DashboardScreen} />
         <Drawer.Screen name="Customers" component={CustomersStack} />
+        <Drawer.Screen name="Orders" component={OrdersStack} />
       </Drawer.Navigator>
     );
   }

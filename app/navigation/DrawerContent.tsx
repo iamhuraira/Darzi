@@ -69,6 +69,13 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
           <MaterialCommunityIcons name="account-group" size={22} color={colors.cream} />
           <Text style={[styles.menuItemText, getStyleForDynamicText(t("drawer.customers", language), 16)]}>{t("drawer.customers", language)}</Text>
         </Pressable>
+        <Pressable
+          style={[styles.menuItem, state.routes[state.index]?.name === "Orders" && styles.menuItemActive]}
+          onPress={() => navigation.navigate("Orders")}
+        >
+          <MaterialCommunityIcons name="clipboard-list-outline" size={22} color={colors.cream} />
+          <Text style={[styles.menuItemText, getStyleForDynamicText(t("drawer.orders", language), 16)]}>{t("drawer.orders", language)}</Text>
+        </Pressable>
       </View>
       <View style={[styles.drawerSection, isRtl && styles.rtl]}>
         {/* <Text style={[styles.sectionLabel, getStyleForDynamicText(t("drawer.language", language), 13)]}>{t("drawer.language", language)}</Text> */}

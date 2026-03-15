@@ -13,6 +13,26 @@ export type RootStackParamList = {
 export type DrawerParamList = {
   Dashboard: undefined;
   Customers: undefined;
+  Orders: undefined;
+};
+
+export type CreateOrderStep2Params = {
+  suits: import("../types/orders").SuitItem[];
+};
+
+export type CreateOrderStep3Params = {
+  orderNumber: string;
+  dueDate: string;
+  notes?: string;
+  advancePaid: number;
+  suits: import("../types/orders").SuitItem[];
+};
+
+export type OrdersStackParamList = {
+  OrdersList: undefined;
+  CreateOrderStep1: undefined;
+  CreateOrderStep2: CreateOrderStep2Params;
+  CreateOrderStep3: CreateOrderStep3Params;
 };
 
 export type CustomersStackParamList = {
